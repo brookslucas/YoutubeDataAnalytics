@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile, File, BackgroundTasks, HTTPException, Depends
 from sqlalchemy import create_engine
-from models import VideoProfile  # Ensure you have this model defined as shown previously
+from models import VideoProfile  
 from pydantic import BaseModel
 from datetime import datetime
 from sqlalchemy.orm import sessionmaker, Session
@@ -10,8 +10,8 @@ from aws_utils import upload_to_s3
 import shutil
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 
-
-app = FastAPI(docs_url=None, redoc_url="/docs")
+print("starting api")
+app = FastAPI()
 
 # Database connection setup
 DATABASE_URL = "sqlite:///./youtube_video_profiles.db"
@@ -25,11 +25,7 @@ def get_db():
     finally:
         db.close()
 
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
+#Retrieve Video Stats
 @app.get("/videos/{video_id}", response_model=VideoProfileSchema)
 def get_video(video_id: str, db: Session = Depends(get_db)):
     """
@@ -42,6 +38,7 @@ def get_video(video_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Video not found")
     return video
 
+#Look at a list of videos
 @app.get("/videos/", response_model=List[VideoProfileSchema])
 def get_videos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     videos = db.query(VideoProfile).offset(skip).limit(limit).all()
@@ -61,7 +58,7 @@ async def upload_video(file: UploadFile = File(...)):
     with open(location, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Now upload to S3
+    # Upload to S3
     result = upload_to_s3(location, "ydapibucket")
     if result:
         return {"message": "File uploaded successfully"}
