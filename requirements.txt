@@ -1,0 +1,9 @@
+fastapi==0.68.0
+uvicorn==0.15.0
+sqlalchemy==1.4.22
+pydantic==1.8.2
+boto3==1.18.21
+python-multipart==0.0.5
+pytest==6.2.4
+
+
