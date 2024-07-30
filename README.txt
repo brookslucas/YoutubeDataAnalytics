@@ -1,7 +1,7 @@
 # YouTube Data API Project
 
 ## Description
-This project is a REST API built with FastAPI to manage and analyze YouTube video statistics. The API provides endpoints to retrieve video details, add new videos, and upload video statistics directly to an AWS S3 bucket.
+Use the FastAPI to enter a video ID and view statistics of certain Youtube videos. See how many days it took to become viral, like ratio, etc. 
 
 ## Installation
 To set up this project on your local machine, follow these steps:
